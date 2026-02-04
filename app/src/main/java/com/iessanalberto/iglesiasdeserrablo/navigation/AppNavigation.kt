@@ -9,20 +9,24 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.iessanalberto.iglesiasdeserrablo.screens.IglesiaScreen
 import com.iessanalberto.iglesiasdeserrablo.screens.MainScreen
+import com.iessanalberto.iglesiasdeserrablo.screens.MapScreen
 import com.iessanalberto.iglesiasdeserrablo.viewmodels.IglesiaViewModel
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun AppNavigation() {
+fun AppNavigation(navController: NavController, modifier: Modifier) {
 
     val iglesiaViewModel: IglesiaViewModel = viewModel()
-    val navController = rememberNavController()
+
 
     AnimatedNavHost(
-        navController = navController,
+        navController = navController as NavHostController,
         startDestination = AppScreens.MainScreen.route
     ) {
 
@@ -66,6 +70,24 @@ fun AppNavigation() {
                 navController = navController,
                 iglesiaViewModel = iglesiaViewModel
             )
+        }
+        composable(
+            route = AppScreens.MapScreen.route,
+            enterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { it },
+                    animationSpec = tween(700, easing = FastOutSlowInEasing)
+                ) + fadeIn(animationSpec = tween(400))
+            },
+            popExitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX = { it },
+                    animationSpec = tween(700, easing = FastOutSlowInEasing)
+                ) + fadeOut(animationSpec = tween(300))
+            }
+        )
+        {
+            MapScreen(navController = navController)
         }
     }
 }

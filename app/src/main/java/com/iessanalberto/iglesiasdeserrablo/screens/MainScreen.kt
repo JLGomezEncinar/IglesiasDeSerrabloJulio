@@ -54,62 +54,13 @@ fun MainScreen(
     navController: NavController,
     iglesiaViewModel: IglesiaViewModel
 ) {
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val scope = rememberCoroutineScope()
 
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            ModalDrawerSheet {
-                Text(
-                    "Menú",
-                    modifier = Modifier.padding(16.dp),
-                    style = MaterialTheme.typography.titleLarge
-                )
-                HorizontalDivider() // Opcional: una línea divisoria
-                NavigationDrawerItem(
-                    label = { Text("Inicio") },
-                    selected = false,
-                    onClick = {
-                        scope.launch { drawerState.close() }
-                        /* Navegar aquí */
-                    }
-                )
-                NavigationDrawerItem(
-                    label = { Text("Ajustes") },
-                    selected = false,
-                    onClick = {
-                        scope.launch { drawerState.close() }
-                        /* Navegar aquí */
-                    }
-                )
-            }
-        }
-    ) {
-        Scaffold(topBar = {
-            TopAppBar(
-                title = { Text("Mi app") },
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            scope.launch { drawerState.open() }
-                        }
-                    ) {
-                        Icon(Icons.Default.Menu, contentDescription = "Abrir Menú")
-                    }
-                }
-            )
-        }
-        )
 
-        { innerPadding ->
-            MainBodyContent(
-                navController = navController,
-                iglesiaViewModel = iglesiaViewModel,
-                modifier = Modifier.padding(innerPadding)
-            )
-        }
-    }
+    MainBodyContent(
+        navController = navController,
+        iglesiaViewModel = iglesiaViewModel,
+
+    )
 }
 
 
@@ -117,7 +68,7 @@ fun MainScreen(
 fun MainBodyContent(
     navController: NavController,
     iglesiaViewModel: IglesiaViewModel,
-    modifier: Modifier
+
 ) {
 
     // Safe area real (status bar, notch, etc)
