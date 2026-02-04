@@ -2,7 +2,7 @@
 <resources>
 
 
-    <style name="Theme.IglesiasDeSerrablo" parent="Theme.SplashScreen">
+    <style name="Theme.IglesiasDeSerrablo" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Color de fondo -->
         <item name="windowSplashScreenBackground">#F3E9D2</item>
 
@@ -11,5 +11,7 @@
 
         <!-- Tema real de la app -->
         <item name="postSplashScreenTheme">@style/Theme.IglesiasDeSerrablo</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 </resources>

@@ -15,9 +15,24 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,24 +46,79 @@ import com.iessanalberto.iglesiasdeserrablo.components.RomanesqueWindowShape
 import com.iessanalberto.iglesiasdeserrablo.data.listaIglesias
 import com.iessanalberto.iglesiasdeserrablo.navigation.AppScreens
 import com.iessanalberto.iglesiasdeserrablo.viewmodels.IglesiaViewModel
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(navController: NavController,
-               iglesiaViewModel: IglesiaViewModel){
-    Scaffold(modifier = Modifier.fillMaxSize()){
-            innerPadding ->
-        MainBodyContent(
-            navController = navController,
-            iglesiaViewModel =iglesiaViewModel,
-            modifier = Modifier.padding(innerPadding)
+fun MainScreen(
+    navController: NavController,
+    iglesiaViewModel: IglesiaViewModel
+) {
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
+
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet {
+                Text(
+                    "Menú",
+                    modifier = Modifier.padding(16.dp),
+                    style = MaterialTheme.typography.titleLarge
+                )
+                HorizontalDivider() // Opcional: una línea divisoria
+                NavigationDrawerItem(
+                    label = { Text("Inicio") },
+                    selected = false,
+                    onClick = {
+                        scope.launch { drawerState.close() }
+                        /* Navegar aquí */
+                    }
+                )
+                NavigationDrawerItem(
+                    label = { Text("Ajustes") },
+                    selected = false,
+                    onClick = {
+                        scope.launch { drawerState.close() }
+                        /* Navegar aquí */
+                    }
+                )
+            }
+        }
+    ) {
+        Scaffold(topBar = {
+            TopAppBar(
+                title = { Text("Mi app") },
+                navigationIcon = {
+                    IconButton(
+                        onClick = {
+                            scope.launch { drawerState.open() }
+                        }
+                    ) {
+                        Icon(Icons.Default.Menu, contentDescription = "Abrir Menú")
+                    }
+                }
+            )
+        }
         )
+
+        { innerPadding ->
+            MainBodyContent(
+                navController = navController,
+                iglesiaViewModel = iglesiaViewModel,
+                modifier = Modifier.padding(innerPadding)
+            )
+        }
     }
 }
 
+
 @Composable
-fun MainBodyContent(navController: NavController,
-                    iglesiaViewModel: IglesiaViewModel,
-                    modifier: Modifier) {
+fun MainBodyContent(
+    navController: NavController,
+    iglesiaViewModel: IglesiaViewModel,
+    modifier: Modifier
+) {
 
     // Safe area real (status bar, notch, etc)
     val insets = WindowInsets.systemBars.asPaddingValues()
@@ -118,6 +188,68 @@ fun MainBodyContent(navController: NavController,
                     }
                 }
             }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MainScreen() {
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
+
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet {
+                Text(
+                    "Menú",
+                    modifier = Modifier.padding(16.dp),
+                    style = MaterialTheme.typography.titleLarge
+                )
+                HorizontalDivider() // Opcional: una línea divisoria
+                NavigationDrawerItem(
+                    label = { Text("Inicio") },
+                    selected = false,
+                    onClick = {
+                        scope.launch { drawerState.close() }
+                        /* Navegar aquí */
+                    }
+                )
+                NavigationDrawerItem(
+                    label = { Text("Ajustes") },
+                    selected = false,
+                    onClick = {
+                        scope.launch { drawerState.close() }
+                        /* Navegar aquí */
+                    }
+                )
+            }
+        }
+    ) {
+        // El Scaffold debe ir AQUÍ, como contenido del Drawer
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text("Mi app") },
+                    navigationIcon = {
+                        IconButton(
+                            onClick = {
+                                scope.launch { drawerState.open() }
+                            }
+                        ) {
+                            Icon(Icons.Default.Menu, contentDescription = "Abrir Menú")
+                        }
+                    }
+                )
+            }
+        ) { padding ->
+            Text(
+                "Contenido principal",
+                modifier = Modifier
+                    .padding(padding)
+                    .padding(16.dp)
+            )
         }
     }
 }
