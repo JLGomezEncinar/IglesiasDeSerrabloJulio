@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -25,9 +26,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.iessanalberto.iglesiasdeserrablo.components.MenuLateral
 import com.iessanalberto.iglesiasdeserrablo.navigation.AppNavigation
 import com.iessanalberto.iglesiasdeserrablo.navigation.AppScreens
+import com.iessanalberto.iglesiasdeserrablo.navigation.AppScreens.Companion.listaMenu
 import com.iessanalberto.iglesiasdeserrablo.ui.theme.IglesiasDeSerrabloTheme
 import kotlinx.coroutines.launch
 import org.osmdroid.config.Configuration
@@ -56,47 +60,10 @@ class MainActivity : ComponentActivity() {
             IglesiasDeSerrabloTheme {
                 val navController = rememberNavController()
                 val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-                val scope = rememberCoroutineScope()
 
-                ModalNavigationDrawer(
-                    drawerState = drawerState,
-                    drawerContent = {
-                        ModalDrawerSheet {
-                            Text(
-                                "Menú",
-                                modifier = Modifier.padding(16.dp),
-                                style = MaterialTheme.typography.titleLarge
-                            )
-                            HorizontalDivider() // Opcional: una línea divisoria
-                            NavigationDrawerItem(
-                                label = { Text("Inicio") },
-                                selected = false,
-                                onClick = {
-                                    scope.launch {
-                                        navController.navigate(AppScreens.MainScreen.route){
-                                            launchSingleTop = true
-                                        }
-                                        drawerState.close()
-                                    }
-                                    /* Navegar aquí */
-                                }
-                            )
-                            NavigationDrawerItem(
-                                label = { Text("Mapa") },
-                                selected = false,
-                                onClick = {
-                                    scope.launch {
-                                        navController.navigate(AppScreens.MapScreen.route){
-                                            launchSingleTop = true
-                                        }
-                                        drawerState.close()
-                                    }
-                                    /* Navegar aquí */
-                                }
-                            )
-                        }
-                    }
-                ) {
+                MenuLateral(navController = navController, drawerState = drawerState)
+                {
+                    val scope = rememberCoroutineScope()
                     Scaffold(topBar = {
                         TopAppBar(
                             title = { Text("Mi app") },
